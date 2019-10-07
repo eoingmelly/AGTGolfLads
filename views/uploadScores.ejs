@@ -26,7 +26,7 @@
     <input id="courseId" hidden value="<%= data.courseId %>" />
   </div>
 </div>
-<form onsubmit="return validate(this)" id="scoresForm" action="/scoring/uploadScores" method="POST" >
+<form onsubmit="return validate(this)" id="scoresForm" action="/scoring" method="GET" >
   <div class="container-fluid">
   <% for(var i=0; i < data.golfLads.length; i++) { %>
   <div class="row" style="margin-top: 10px;">

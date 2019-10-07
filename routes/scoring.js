@@ -96,25 +96,27 @@ router.post('/', ensureAuthenticated, async function(req, res, next) {
 });
 
 router.post('/uploadScores', ensureAuthenticated, async function(req, res, next) {
-    let golfLads = [];
+    // let golfLads = [];
 
-    if(req.user.currentScore != null ){
-        if(req.user.currentScore.complete == false){
-            await AGTGolfLad.find({'currentScore.holeNumber' : req.user.currentScore.holeNumber, 'scoringGroup': req.user.scoringGroup}, {profilePicture:0}).then(golfLadsLive => {
-                golfLads = golfLadsLive;
-            })
+    // console.log('in upload scores');
+
+    // if(req.user.currentScore != null ){
+    //     if(req.user.currentScore.complete == false){
+    //         await AGTGolfLad.find({'currentScore.holeNumber' : req.user.currentScore.holeNumber, 'scoringGroup': req.user.scoringGroup}, {profilePicture:0}).then(golfLadsLive => {
+    //             golfLads = golfLadsLive;
+    //         })
             
-            let data = {"holeNumber": req.user.currentScore.holeNumber + 1, "golfLads": golfLads, "courseId" : req.user.currentScore.course._id };
-            console.log(golfLads[0].currentScore.course.holes[req.user.currentScore.holeNumber]);
-                req.flash(
-                'success_msg',
-                'You have successfully posted your scores.'
-            );
-            return res.render('uploadScores', {data});
-        }
-    }
+    //         let data = {"holeNumber": req.user.currentScore.holeNumber + 1, "golfLads": golfLads, "courseId" : req.user.currentScore.course._id };
+    //         console.log(golfLads[0].currentScore.course.holes[req.user.currentScore.holeNumber]);
+    //             req.flash(
+    //             'success_msg',
+    //             'You have successfully posted your scores.'
+    //         );
+    //         return res.render('uploadScores', {data});
+    //     }
+    // }
 
-    return res.redirect('/standings');
+    // return res.redirect('/standings');
 
 });
 
