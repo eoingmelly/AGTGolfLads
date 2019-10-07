@@ -1,0 +1,77 @@
+<div class="card">
+    <% include ./partials/messages %>
+</div>
+<div class="row">
+  <div class="col-12">
+    <div>
+      <p class="header"><%= golfLad.displayname %> (<%= golfLad.handicap %>)</p>
+    </div>
+    <img src="/api/agtGolfLad/<%= golfLad._id %>/profilePicture" alt="<%= golfLad.displayName %>" style="width:100%" />
+  <blockquote>
+    <p class="quote">"<%= golfLad.displayQuote %>"</p>
+  </blockquote>
+  
+  <p><%= golfLad.profile %></p>
+  <div class="container">
+    <div class="row">
+      <div class="col-3"></div>
+      <div class="col-6">
+        <div style="width: 100%; text-align: center; font-weight: bold;">History</div>
+      </div>
+      <div class="col-3"></div>
+    </div>
+    <div class="row">
+      <div class="col-8">
+          <div class="compIntro">AGT Appearances:</div>
+      </div>
+      <div class="col-4">
+          <div  class="compIntro"><%= golfLad.competitionHistory.agtAttendances %></div>
+      </div>
+    </div>
+    <div class="row" >
+      <div class="col-4">
+        <div class="compIntro">Magics:</div>
+      </div>
+      <div class="col-2">
+          <div  class="compIntro"><%= golfLad.competitionHistory.magicMikeWinCount %></div>
+      </div>
+      <div class="col-4">
+          <div class="compIntro">Minis:</div>
+      </div>
+      <div class="col-2">
+          <div  class="compIntro"><%= golfLad.competitionHistory.miniMikeWinCount %></div>
+      </div>
+    </div>
+    <div class="row" >
+        <div class="col-4">
+          <div  class="compIntro">LDs:</div>
+        </div>
+        <div class="col-2">
+            <div  class="compIntro"><%= golfLad.competitionHistory.longestDriveCourseWins %></div>
+        </div>
+        <div class="col-4">
+            <div  class="compIntro">CTPs:</div>
+        </div>
+        <div class="col-2">
+            <div  class="compIntro"><%= golfLad.competitionHistory.nearestThePinCourseWins %></div>
+        </div>
+    </div>
+    <div class="row" >
+      <div class="col-8">
+        <div class="compIntro">One Day Wins:</div>
+      </div>
+      <div class="col-4">
+          <div  class="compIntro"><%= golfLad.competitionHistory.oneDayWins %></div>
+      </div>
+    </div>
+    <div style="margin: 24px 0;" class="row">
+      <div class="col-4"><a target="_blank" href="<%= golfLad.insturl %>"><i class="fa fa-instagram" style="margin: 0px 24px;"></i></a></div>      
+      <div class="col-4"><a target="_blank" href="<%= golfLad.liurl %>"><i class="fa fa-linkedin" style="margin: 0px 24px;"></i></a></div>      
+      <div class="col-4"><a target="_blank" href="<%= golfLad.fburl %>"><i class="fa fa-facebook" style="margin: 0px 24px;"></i></a></div>      
+    </div>
+  </div>
+    
+  
+</div>
+
+

@@ -1,0 +1,70 @@
+<div class="row">
+  <div class="col-md-1"></div>
+  <div class="col-md-10">
+    <div class="row">
+      <div class="col-md-12">
+        <% include ./partials/messages %>
+      </div>
+      <div class="col-md-12">
+        <h3 class="leagueTitleHeader">Mini Mike Standings</h3>
+      </div>
+      <div class="col-4">
+        <img src="/logos/agtLogo2019.png" alt="cá bhfuil sé?" style=" width: 100%;margin-left:auto; margin-right: auto; display: block;" >
+      </div>
+      <div class="col-4" >
+        <img src="/logos/pgatourlogo.png" alt="cá bhfuil sé?"  style="width: 100%; margin-left:auto; margin-right: auto; display: block;"    >
+      </div>
+      <div class="col-4">
+        <img src="/logos/eurotourlogo.png" alt="cá bhfuil sé?"  style="width: 100%;margin-left:auto; margin-right: auto; display: block;"  >
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead class="hideOnSmall">
+          <tr style="text-align:center">
+            <th scope="col">Pos.</th> 
+            <th scope="col">Player</th>
+            <th scope="col" class="hideOnMobile" >Total Strokes</th>
+            <th scope="col">Score</th>
+            <th scope="col">Through</th>
+          </tr>
+        </thead>
+        <tbody id="leagueTableBody">
+        </tbody>
+      </table>
+    </div>
+    <form style="margin: 8px;" action="/standings" action="GET">
+      <button type="submit" class="btn btn-primary" >Back</button>  
+    </form>
+  </div>
+  <div class="col-md-1"></div>
+</div>  
+  <script>
+    $(document).ready(function(){  
+      GetParThreeTableData();
+      //setInterval(GetLeagueTableData, 3000);
+});
+
+function GetParThreeTableData (){ 
+        $.ajax({
+      url: "http://localhost:5000/api/AGTGolfLads/parThreeScores",
+      success: function( result ) {
+        populateLeagueTable(result);
+      },
+      error: function (err) {
+      }
+    });
+  }
+function populateLeagueTable(tableData) {
+  $('#leagueTable').empty();
+    for (var indx in tableData) {
+      $('#leagueTableBody').append('<tr>');
+      $('#leagueTableBody').append('<th scope="row" style="text-align:center"><b>' + tableData[indx].Position + '</b></th>');
+      $('#leagueTableBody').append('<td><a href=../profiles/profile/' + tableData[indx].PlayerID + '>'  + tableData[indx].PlayerName + '</a></td>');
+      $('#leagueTableBody').append('<td style="text-align:center" class="hideOnMobile">' + tableData[indx].StrokesPlayed + '</td>');
+      $('#leagueTableBody').append('<td style="text-align:center">' + tableData[indx].ScoreToPar + '</td>');
+      $('#leagueTableBody').append('<td style="text-align:center">' + tableData[indx].HolesPlayed + '</td>');
+      $('#leagueTableBody').append('</tr>');
+    }
+}
+  </script>

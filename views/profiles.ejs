@@ -1,0 +1,25 @@
+
+<div class="card">
+    <% include ./partials/messages %>
+</div>
+<div class="row"> 
+<a style="margin: 15px; width:100%;" class="btn btn-primary" href="/standings">Go To Standings</a>
+<% for(var i=0; i < golfLads.length; i++) { %>
+    <div style="margin-bottom: 12px;" class="col-12 col-md-4 col-l-3">
+        <div class="card">
+            <img src="/api/agtGolfLad/<%= golfLads[i]._id %>/profilePicture" alt="<%= golfLads[i].displayName %>" style="width:100%; max-height: 156px;" />
+            <h1><%= golfLads[i].displayname %></h1>
+            <blockquote>
+                <p class="title">"<%= golfLads[i].displayQuote %>"</p>
+            </blockquote>
+            <p class="title"> Playing Off: <%= golfLads[i].handicap %></p>
+            <p><%= golfLads[i].profile %></p>
+            <div style="margin: 24px 0;">
+                <a target="_blank" href="<%= golfLads[i].insturl %>"><i class="fa fa-instagram" style="margin: 0px 24px;" ></i></a>
+                <a target="_blank" href="<%= golfLads[i].liurl %>"><i class="fa fa-linkedin" style="margin: 0px 24px;"></i></a>
+                <a target="_blank" href="<%= golfLads[i].fburl %>"><i class="fa fa-facebook" style="margin: 0px 24px;"></i></a>
+            </div>
+        </div>
+    </div>
+<% } %>
+</div>

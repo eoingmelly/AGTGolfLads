@@ -1,0 +1,108 @@
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    max-width: 300px;
+    margin: auto;
+    text-align: center;
+    font-family:NanumGothicRegular;
+    }
+    
+    .title {
+    color: black;
+    font-size: 18px;
+    }
+
+    .quote{
+      color: grey;
+      font-size: 18px;
+      text-align: center;
+      margin-left: 24px;
+      margin-right: 24px;
+    }
+
+    .header {
+      font-size: 24px;
+      text-align: center;
+      margin: 16px;
+    }
+    
+    button {
+    border: none;
+    outline: 0;
+    display: inline-block;
+    padding: 8px;
+    color: white;
+    background-color: #000;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    font-size: 18px;
+    }
+
+    .leagueTitleHeader{
+      text-align: center;
+      margin: 8px; 
+      color:rgb(3, 3, 94);
+      
+    }
+
+    .compIntro{
+      width : 100%;
+      color: rgb(3, 3, 94);
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .holeIntro{
+      text-align: center; 
+      width : 100%;
+      color: rgb(3, 3, 94);
+      font-weight: bold;
+    }
+    
+    a {
+    text-decoration: none;
+    font-size: 22px;
+    color: black;
+    }
+    
+    button:hover, a:hover {
+    opacity: 0.7;
+    }
+
+
+    @media screen and (max-width: 768px) {
+        .hideOnMobile {
+          visibility: hidden;
+          clear: both;
+          float: left;
+          margin: 10px auto 5px 20px;
+          width: 28%;
+          display: none;
+        }
+
+      }
+
+      @media screen and (max-width: 990px) {
+        td {
+          font-size: small;
+        }
+        a {
+            font-size: small;
+        }
+        th {
+            font-size: small;
+        }
+        h1{
+            font-size: small;
+        }
+        h3{
+          font-size: small;
+        }
+        .title{
+          font-size: small;
+        }
+        .header {
+          font-size: 20px;
+        }
+        
+      }

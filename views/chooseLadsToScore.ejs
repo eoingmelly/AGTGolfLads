@@ -1,0 +1,22 @@
+<div class="card">
+        <% include ./partials/messages %>
+    </div>
+    <div class="row"> 
+        <form action="/scoring" method="POST">
+        <% for(var i=0; i < golfLads.length; i++) { %>
+            <div class="form-group col-md-4">
+                <input type="checkbox" name="<%= i %>" value="<%= golfLads[i]._id %>"> <%= golfLads[i].displayname %> </br>
+            </div>  
+        <% } %>
+        <input type="submit" value="Let's Go!" /> 
+    </form>
+</div> 
+<script>
+    $(document).ready(function() {
+        if($(':checkbox').length === 4){
+            $(':checkbox').prop( "checked", true );
+        } else{
+            console.log('checkboxes : ' +  $(':checkbox').length);
+        }
+    })
+</script>

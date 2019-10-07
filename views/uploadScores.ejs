@@ -1,0 +1,156 @@
+  <div class="card">
+    <% include ./partials/messages %>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-2"></div>
+    <div class="col-8">
+      <label class="holeIntro" id="holeNumberLabel" > Hole Number: <%= data.holeNumber %> </label> 
+    </div>
+    <div class="col-2"></div>
+  </div>
+  <div class="row">
+    <div class="col-6">    
+      <% if (data.course != null) { %>
+      <label class="holeIntro" >Stroke Index: <%= data.course.holes[0].strokeIndex %></label>
+    <% } else { %>  
+      <label class="holeIntro" >Str. Indx: <%= data.golfLads[0].currentScore.course.holes[data.holeNumber - 1].strokeIndex %></label>
+    <% } %></div>
+    <div class="col-6">    
+      <% if (data.course != null) { %>
+      <label class="holeIntro" >Par: <%= data.course.holes[0].par %></label>
+    <% } else { %>  
+      <label class="holeIntro" >Par: <%= data.golfLads[0].currentScore.course.holes[data.holeNumber - 1].par %></label>
+    <% } %></div>
+    <input id="holeNumber" hidden value="<%= data.holeNumber %>" />
+    <input id="courseId" hidden value="<%= data.courseId %>" />
+  </div>
+</div>
+<form onsubmit="return validate(this)" id="scoresForm" action="/scoring/uploadScores" method="POST" >
+  <div class="container-fluid">
+  <% for(var i=0; i < data.golfLads.length; i++) { %>
+  <div class="row" style="margin-top: 10px;">
+    <div class="col-8">
+      <label style="text-align: center;"><%= data.golfLads[i].displayname %></label>
+      <input type="hidden" id="idGolfer_<%= i %>" value="<%= data.golfLads[i]._id %>" >
+    </div>
+    <div class="col-4" style="margin:auto;">
+      <input type="number" style="box-sizing: border-box; width: 100%;" id="strokesGolfer_<%= i %>" name="strokes" id="score" required >
+    </div>
+  </div>
+  <% } %>
+  <button class="btn btn-primary" style="margin-top: 15px; margin-bottom: 30px;" id="holeNumberPost" type="submit" >Send Score for <%= data.holeNumber %></button>  
+</div>
+</form>
+<div class="table-responsive">
+    <table class="table table-striped">
+      <thead class="hideOnSmall">
+        <tr style="text-align:center">
+          <th scope="col">Pos.</th> 
+          <th scope="col">Player</th>
+          <th scope="col">R1</th>
+          <th scope="col">R2</th>
+          <th class="hideOnMobile" scope="col">Total Strokes</th>
+          <th scope="col">Total Points</th>
+          <th class="hideOnMobile" scope="col">Through</th>
+        </tr>
+      </thead>
+      <tbody id="leagueTableBody">
+      </tbody>
+    </table>
+  </div>
+<script>
+  $("#scoresForm").submit(function(e){
+    //postScoreToServer();
+  })
+
+  
+function validate(form) {
+  let valid = true;  
+  
+  if(form.strokesGolfer_0.value == 0 || form.strokesGolfer_1.value == 0 || form.strokesGolfer_2.value == 0 || form.strokesGolfer_3.value == 0){
+    valid = false;
+  }
+  if(!valid) {
+      alert('You must supply a score for all players.');
+      return false;
+  }
+  else {
+      postScoreToServer();
+  }
+}
+
+  function postScoreToServer() {
+    var id0 = $("#idGolfer_0").val();
+    var id1 = $("#idGolfer_1").val();
+    var id2 = $("#idGolfer_2").val();
+    var id3 = $("#idGolfer_3").val();
+
+    var str0 = $("#strokesGolfer_0").val();
+    var str1 = $("#strokesGolfer_1").val();
+    var str2 = $("#strokesGolfer_2").val();
+    var str3 = $("#strokesGolfer_3").val();
+
+  if(str0 != null || str1 != null || str2 != null || str3 != null){
+    var hn = $("#holeNumber").val();
+      var courseId = $("#courseId").val();
+      let data = { "playersScores" : { "players": [{"id":id0,"strokes":str0},{"id":id1,"strokes":str1},{"id":id2,"strokes":str2},{"id":id3,"strokes":str3}],"courseId":courseId}};
+      performAjaxCall(hn, JSON.stringify(data));
+      
+  } else{
+    
+  }
+ }
+
+  function performAjaxCall(holeNum, postData){ 
+    var api_url = 'http://localhost:5000/';
+    let myurl = api_url + "api/agtGolfScores/" + holeNum;
+    $.ajax({
+        url: api_url + "api/agtGolfScores/" + holeNum,
+        type: 'POST',
+        async: false,
+        headers: { 'Authorization':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDVkOWM3ZDk4MWFmZDA3NTg0NjU3MDIiLCJpYXQiOjE1NjY5NDExMTB9.VuyHTroScprGPI-DdbhC3zFwAJ8Xud_xLBcct4hYwK8'},
+        contentType: "application/json",
+        data: postData,
+        dataType: 'json',
+        success: function(result){
+          
+        },
+        error: function(error){
+          alert(error.responseText);
+        }
+    });
+  };
+
+  
+  $(document).ready(function(){  
+      GetLeagueTableData();
+      //setInterval(GetLeagueTableData, 3000);
+});
+
+function GetLeagueTableData (){ 
+        $.ajax({
+      url: "http://localhost:5000/api/AGTGolfLads/leagueScores",
+      success: function( result ) {
+        populateLeagueTable(result);
+      },
+      error: function (err) {
+      }
+    });
+  }
+function populateLeagueTable(tableData) {
+  $('#leagueTable').empty();
+    for (var indx in tableData) {
+      $('#leagueTableBody').append('<tr>');
+      $('#leagueTableBody').append('<th scope="row" style="text-align:center"><b>' + tableData[indx].Position + '</b></th>');
+      $('#leagueTableBody').append('<td><a href=profiles/profile/' + tableData[indx].PlayerID + '>'  + tableData[indx].PlayerName + '</a></td>');
+      $('#leagueTableBody').append('<td style="text-align:center"><small class="hideOnMobile" >' + tableData[indx].RoundOneStrokes + ': </small><b>' + tableData[indx].RoundOnePoints + '</b></td>');
+      $('#leagueTableBody').append('<td style="text-align:center"><small class="hideOnMobile">' + tableData[indx].RoundTwoStrokes + ' : </small><b>' + tableData[indx].RoundTwoPoints + '</b></td>');
+      $('#leagueTableBody').append('<td style="text-align:center"  class="hideOnMobile">' + tableData[indx].StrokesPlayed + '</td>');
+      $('#leagueTableBody').append('<td style="text-align:center">' + tableData[indx].StablefordPoints + '</td>');
+      $('#leagueTableBody').append('<td style="text-align:center" class="hideOnMobile">' + tableData[indx].HolesPlayed + '</td>');
+      $('#leagueTableBody').append('</tr>');
+    }
+}
+  
+</script>
