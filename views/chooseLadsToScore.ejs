@@ -1,6 +1,7 @@
 <div class="card">
         <% include ./partials/messages %>
     </div>
+
     <div class="row"> 
         <form action="/scoring" method="POST">
         <% for(var i=0; i < golfLads.length; i++) { %>
@@ -10,6 +11,7 @@
         <% } %>
         <input type="submit" value="Let's Go!" /> 
     </form>
+    <a href="/standings" class="btn btn-primary">Back To Standings</a>
 </div> 
 <script>
     $(document).ready(function() {
