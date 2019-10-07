@@ -5,6 +5,7 @@ var bodyParser = require('body-parser')
 const passport = require('passport');
 const session = require('express-session');
 const flash = require('connect-flash');
+var path = require('path'); 
 
 
 require('dotenv').config({ path: './config/dev.env' });
@@ -16,9 +17,10 @@ const app = express();
 
 // EJS
 app.use(expressLayouts);
-app.set('views', __dirname + '\\views');
-app.set('view engine', 'ejs');
+//app.set('views', __dirname + '\\views');
 
+app.set('view engine', 'ejs');
+app.set('views', path.join(process.cwd() + '/views')); 
 // DB Config
 const db = require('./config/keys').mongoURI;
 
@@ -37,7 +39,8 @@ app.use(
 // Connect flash
 app.use(flash());
 
-app.use(express.static(__dirname + '/public'));
+//app.use(express.static(__dirname + '/public'));
+app.use(express.static( path.join(process.cwd() + '/public'));
 
 // Global variables
 app.use(function(req, res, next) {
