@@ -103,10 +103,9 @@ function validate(form) {
  }
 
   function performAjaxCall(holeNum, postData){ 
-    var api_url = 'https://agtgolflads.herokuapp.com/';
-    let myurl = api_url + "api/agtGolfScores/" + holeNum;
+  
     $.ajax({
-        url: api_url + "api/agtGolfScores/" + holeNum,
+        url: "api/agtGolfScores/" + holeNum,
         type: 'POST',
         async: false,
         headers: { 'Authorization':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDVkOWM3ZDk4MWFmZDA3NTg0NjU3MDIiLCJpYXQiOjE1NjY5NDExMTB9.VuyHTroScprGPI-DdbhC3zFwAJ8Xud_xLBcct4hYwK8'},
