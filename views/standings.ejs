@@ -55,11 +55,13 @@
 
 function GetLeagueTableData (){ 
         $.ajax({
-      url: "https://agtgolflads.herokuapp.com/api/AGTGolfLads/leagueScores",
+      url: "https://www.agtgolflads.herokuapp.com/api/AGTGolfLads/leagueScores",
       success: function( result ) {
         populateLeagueTable(result);
       },
       error: function (err) {
+        alert(err.error);
+        console.log(err.error);
       }
     });
   }
