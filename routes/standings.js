@@ -21,7 +21,7 @@ router.get('/parthrees', ensureAuthenticated, async (req, res) => {
     res.locals.user = req.user;
     AGTGolfLad.find({}).then(golfLads => {
         if(golfLads != undefined){
-            return res.render('parThreeStandings', {data: golfLads});
+            return res.render('parthreestandings', {data: golfLads});
         } else{
             return res.status(404).send("Couldn't find them...");
         }
