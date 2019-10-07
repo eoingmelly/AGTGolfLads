@@ -91,10 +91,10 @@ router.get('/agtGolfLads', async (req, res) => {
             for (let index = 0; index < lads.length; index++) {
                 const element = lads[index];
                 
-                if(element.fburl == "faceb") {element.fburl = "#"}
-                if(element.liurl == "link") {element.liurl = "#"}
-                if(element.insturl == "insta") {element.insturl = "#"}
-                //if(element.bonusPoints == 0) {element.bonusPoints = -1}
+                // if(element.fburl == "faceb") {element.fburl = "#"}
+                // if(element.liurl == "link") {element.liurl = "#"}
+                // if(element.insturl == "insta") {element.insturl = "#"}
+                //if(element.bonusPoints == 8) {element.bonusPoints = -1}
                 //if(element.scoringGroup != 0) {element.scoringGroup = 0}
                 await element.save();
             }
@@ -204,10 +204,6 @@ router.get('/agtGolfLads/leagueScores', async (req, res) => {
             let lastPosition = 1;
             for (let indx = 0; indx < resultString.length; indx++) {
                 const element = resultString[indx];
-                // console.log(JSON.stringify(element));
-                // console.log('lastPoints = ' + lastPoints);
-                // console.log('stablefordpoints = ' + element.StablefordPoints);
-
                 if(indx == 0){
                     element.Position = indx + 1;
                 }
@@ -217,7 +213,6 @@ router.get('/agtGolfLads/leagueScores', async (req, res) => {
 
                 lastPoints = element.StablefordPoints;
                 lastPosition = element.Position;
-
             }
 
             return res.status(200).json(resultString);
@@ -269,11 +264,84 @@ router.get('/agtGolfLads/parThreeScores', async (req, res) => {
 })
 
 router.get('/agtGolfLads/finaliseLeagueTable', async (req, res) => {
-    if(req.user.displayName != "Melly"){
-        return res.status(202).json("You do not have the permissions for this action");
-    }
 
+    let results= [];
+    let resultString = [];
+    AGTGolfLad.find({}).then(async lads => {
+        if(lads.length > 0){
+            for (let index = 0; index < lads.length; index++) {
+                const element = await lads[index].getLeagueScore();
+                resultString.push(element);
+            }
+
+            resultString = resultString.sort((a, b) => (a.StablefordPoints < b.StablefordPoints) ? 1 : -1)
+            let lastPoints = -1;
+            let lastPosition = 1;
+            for (let indx = 0; indx < resultString.length; indx++) {
+                const element = resultString[indx];
+                if(indx == 0){
+                    element.Position = indx + 1;
+                }
+                else{
+                    element.Position = lastPoints == element.StablefordPoints ? lastPosition : (indx + 1);    
+                }
+
+                lastPoints = element.StablefordPoints;
+                lastPosition = element.Position;
+            }
+
+            for (let i = 0; i < resultString.length; i++) {
+                const element = resultString[i];
+                let pts = 0;
+
+                switch (element.Position) {
+                    case 1:
+                        pts = 8;
+                        break;
+                    case 2:
+                        pts = 6;
+                        break;
+                    case 3:
+                        pts = 5;
+                        break;
+                    case 4:
+                        pts = 4;
+                        break;
+                    case 5:
+                        pts = 3;
+                        break;
+                    case 6:
+                        pts = 2;
+                        break;
+                    case 7:
+                        pts = 1;
+                        break;
+                    case 8:
+                        pts = 0;
+                        break;                                                                                          
+                    default:
+                        break;
+                }
+
+                console.log('pts is : ' + pts);
+
+                await AGTGolfLad.findByIdAndUpdate(element.PlayerID, {$set: {bonusPoints: pts }}, {new: true}).then(newOne => {
+                    console.log('newOne.bonusPoints: ' + newOne.bonusPoints);
+                }).catch(err => {
+                    console.log(err);
+                })
+
+                console.log(element.PlayerName + ' finished in ' + element.Position + ' position so gets ' + pts + ' points');
+            }
+
+            return res.status(200).json(resultString);
+        } else {
+            return res.status(404).json('No lads found');
+        }
     
+    }).catch(err =>{
+        return res.status(400).json(err);
+    })
 })
 
 //golf lad by id
@@ -320,19 +388,6 @@ router.get('/agtGolfLad/:id/profilePicture', function(req,res,next) {
         }
     });
   });
-
-// router.get('/agtGolfLad/:id/currentScore', async (req, res) => { 
-    
-//     AGTGolfLad.findOne({_id : req.params.id}).then(async lad => {
-//         if(lad != undefined){
-//             return res.status(200).json(await lad.getCurrentRoundScore());
-//         } else {
-//             return res.status(404).json('No lad found with id ' + req.params.id);
-//         }
-//     }).catch(err =>{
-//         return res.status(400).json(err);
-//     })
-// })
 
 
 router.delete('/agtGolfScores/all', async (req, res) =>{
