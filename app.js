@@ -39,8 +39,8 @@ app.use(
 // Connect flash
 app.use(flash());
 
-//app.use(express.static(__dirname + '/public'));
-app.use(express.static( path.join(process.cwd() + '/public')));
+app.use(express.static(__dirname + '/public'));
+//app.use(express.static( path.join(process.cwd() + '/public')));
 
 // Global variables
 app.use(function(req, res, next) {
