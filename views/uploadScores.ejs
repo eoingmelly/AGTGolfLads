@@ -130,7 +130,7 @@ function validate(form) {
 
 function GetLeagueTableData (){ 
         $.ajax({
-      url: "http://localhost:5000/api/AGTGolfLads/leagueScores",
+      url: "/api/AGTGolfLads/leagueScores",
       success: function( result ) {
         populateLeagueTable(result);
       },
