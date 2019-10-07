@@ -52,7 +52,7 @@
 
 function GetLeagueTableData (){ 
         $.ajax({
-      url: "http://localhost:5000/api/AGTGolfLads/leagueScores",
+      url: "https://agtgolflads.herokuapp.com/api/AGTGolfLads/leagueScores",
       success: function( result ) {
         populateLeagueTable(result);
       },

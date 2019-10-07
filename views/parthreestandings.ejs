@@ -47,7 +47,7 @@
 
 function GetParThreeTableData (){ 
         $.ajax({
-      url: "http://localhost:5000/api/AGTGolfLads/parThreeScores",
+      url: "https://agtgolflads.herokuapp.com/api/AGTGolfLads/parThreeScores",
       success: function( result ) {
         populateLeagueTable(result);
       },

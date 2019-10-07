@@ -103,7 +103,7 @@ function validate(form) {
  }
 
   function performAjaxCall(holeNum, postData){ 
-    var api_url = 'http://localhost:5000/';
+    var api_url = 'https://agtgolflads.herokuapp.com/';
     let myurl = api_url + "api/agtGolfScores/" + holeNum;
     $.ajax({
         url: api_url + "api/agtGolfScores/" + holeNum,
