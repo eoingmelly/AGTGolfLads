@@ -10,7 +10,6 @@
   <blockquote>
     <p class="quote">"<%= golfLad.displayQuote %>"</p>
   </blockquote>
-  
   <p><%= golfLad.profile %></p>
   <div class="container">
     <div class="row">
@@ -47,13 +46,13 @@
           <div  class="compIntro">LDs:</div>
         </div>
         <div class="col-2">
-            <div  class="compIntro"><%= golfLad.competitionHistory.longestDriveCourseWins %></div>
+            <div  class="compIntro"><%= golfLad.competitionHistory.longestDriveCourseWins.length  %></div>
         </div>
         <div class="col-4">
             <div  class="compIntro">CTPs:</div>
         </div>
         <div class="col-2">
-            <div  class="compIntro"><%= golfLad.competitionHistory.nearestThePinCourseWins %></div>
+            <div  class="compIntro"><%= golfLad.competitionHistory.nearestThePinCourseWins.length %></div>
         </div>
     </div>
     <div class="row" >
@@ -70,8 +69,32 @@
       <div class="col-4"><a target="_blank" href="<%= golfLad.fburl %>"><i class="fa fa-facebook" style="margin: 0px 24px;"></i></a></div>      
     </div>
   </div>
-    
-  
+  </div>
 </div>
+<% if (golfLad.displayname == "Melly") { %>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-4">
+      <button class="btn btn-primary" onclick="resetAllGolfScores()" >Reset Scores</button>
+    </div>
+    <div class="col-4"></div>
+    <div class="col-4"></div>
+  </div>
+</div>
+<% } %> 
+
+<script>
+  function resetAllGolfScores() {
+    $.ajax({
+      url: "/api/agtGolfScores/all",
+      type: 'DELETE',
+      success: function( result ) {
+        alert('We deleted them!');
+      },
+      error: function (err) {
+      }
+    });
+  }
+</script>
 
 
