@@ -110,6 +110,7 @@ agtGolfLadSchema.methods.getLeagueScore = async function () {
   let r1Strokes = 0;
   let r2Strokes = 0;
   let textResult = this.displayname ;
+  let bonusPoints = this.bonusPoints;
 
   for (let index = 0; index < roundsOneAndTwo.length; index++) {
     const element = roundsOneAndTwo[index];
@@ -144,32 +145,56 @@ agtGolfLadSchema.methods.getLeagueScore = async function () {
     "RoundTwoStrokes" : r2Strokes,
     "StablefordPoints" : stableFordScore,
     "HolesPlayed" : holesPlayed,
-    "TextResult" : textResult
+    "TextResult" : textResult,
+    "BonusPoints" : bonusPoints
   }
  
   return result;
 }
 
 agtGolfLadSchema.methods.getChampionshipSundayScore = async function () {
-  if(this.currentScore.roundNumber != 3){
-    return {
-      "result" : this.displayname + " has not started his final round yet..."
+console.log('this.currentscore is ' + this.currentScore);
+
+let textResult = this.displayname + "'s current score is ";
+let result = {};
+
+  if(this.currentScore === null){
+    textResult =  this.displayname + " has not started his final round yet..."
+  result = {
+    "PlayerID" : this._id,
+    "PlayerName" : this.displayname,
+    "StrokesPlayed" : 0,
+    "StablefordPoints" : 0,
+    "BonusPoints" : this.bonusPoints,
+    "TotalPoints" : this.bonusPoints,
+    "HolesPlayed" : 0,
+    "TextResult" : textResult
+  }
+
+    return result;
+  } else if(this.currentScore.roundNumber != 3  ){
+    textResult =  this.displayname + " has not started his final round yet..."
+    result = {
+      "PlayerID" : this._id,
+      "PlayerName" : this.displayname,
+      "StrokesPlayed" : 0,
+      "StablefordPoints" : 0,
+      "BonusPoints" : this.bonusPoints,
+      "TotalPoints" : this.bonusPoints,
+      "HolesPlayed" : 0,
+      "TextResult" : textResult
     }
   }
 
-  let textResult = this.displayname + "'s current score is ";
-  if(this.currentScore == null){
-    return textResult = this.displayname + " has not registered a round yet";
-  } else {
-    textResult +=  this.currentScore.strokesTotalPlayed + " strokes played, for " + this.currentScore.stablefordTotalScore + " points through " + this.currentScore.holesPlayed + " holes, plus a bonus of " + this.bonusPoints + " based on his league position.";
-  }
-  let result = {
+  textResult +=  this.currentScore.strokesTotalPlayed + " strokes played, for " + this.currentScore.stablefordTotalScore + " points through " + this.currentScore.holesPlayed + " holes, plus a bonus of " + this.bonusPoints + " based on his league position.";
+ 
+  result = {
     "PlayerID" : this._id,
     "PlayerName" : this.displayname,
     "StrokesPlayed" : this.currentScore.strokesTotalPlayed,
     "StablefordPoints" : this.currentScore.stablefordTotalScore,
     "BonusPoints" : this.bonusPoints,
-    "TotalPoints" : (this.bonusPoints + this.currentScore.stablefordTotalScore),
+    "TotalPoints" : parseInt(this.bonusPoints + this.currentScore.stablefordTotalScore),
     "HolesPlayed" : this.currentScore.holesPlayed,
     "TextResult" : textResult
   }

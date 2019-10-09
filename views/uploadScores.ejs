@@ -35,14 +35,14 @@
       <input type="hidden" id="idGolfer_<%= i %>" value="<%= data.golfLads[i]._id %>" >
     </div>
     <div class="col-4" style="margin:auto;">
-      <input type="number" style="box-sizing: border-box; width: 100%;" id="strokesGolfer_<%= i %>" name="strokes" id="score" required >
+      <input type="number" style="box-sizing: border-box; width: 100%;" id="strokesGolfer_<%= i %>" name="strokes" id="score" max="12" required >
     </div>
   </div>
   <% } %>
   <button class="btn btn-primary" style="margin-top: 15px; margin-bottom: 30px;" id="holeNumberPost" type="submit" >Send Score for <%= data.holeNumber %></button>  
 </div>
 </form>
-<div class="table-responsive">
+<div id="leagueTable" class="table-responsive">
     <table class="table table-striped">
       <thead class="hideOnSmall">
         <tr style="text-align:center">
@@ -59,6 +59,22 @@
       </tbody>
     </table>
   </div>
+  <div id="championshipTable" class="table-responsive">
+      <table class="table table-striped">
+        <thead class="hideOnSmall">
+          <tr style="text-align:center">
+            <th scope="col">Pos.</th> 
+            <th scope="col">Player</th>
+            <th class="hideOnMobile"  scope="col">Strokes</th>
+            <th scope="col">Points(B)</th>
+            <th scope="col">Total</th>
+            <th class="hideOnMobile" scope="col">Through</th>
+          </tr>
+        </thead>
+        <tbody id="leagueTableBody">
+        </tbody>
+      </table>
+    </div>
 <script>
   $("#scoresForm").submit(function(e){
     //postScoreToServer();
@@ -120,12 +136,44 @@ function validate(form) {
         }
     });
   };
-
   
   $(document).ready(function(){  
-      GetLeagueTableData();
-      //setInterval(GetLeagueTableData, 3000);
+
+  let cid = $('#courseId').val();
+
+  if(cid == "5d7fa439e1b8b93b0442e1c8"){
+    GetChampionshipSundayTable();
+  } else{
+    GetLeagueTableData();
+  }
+
 });
+
+function GetChampionshipSundayTable (){ 
+        $.ajax({
+      url: "/api/AGTGolfLads/championshipSunday",
+      success: function( result ) {
+        populateSundayLeagueTable(result);
+      },
+      error: function (err) {
+      }
+    });
+  }
+
+
+function populateSundayLeagueTable(tableData) {
+  $('#leagueTable').empty();
+    for (var indx in tableData) {
+      $('#leagueTableBody').append('<tr>');
+      $('#leagueTableBody').append('<th scope="row" style="text-align:center"><b>' + tableData[indx].Position + '</b></th>');
+      $('#leagueTableBody').append('<td><a href=profiles/profile/' + tableData[indx].PlayerID + '>'  + tableData[indx].PlayerName + '</a></td>');
+      $('#leagueTableBody').append('<td style="text-align:center" class="hideOnMobile"><b>' + tableData[indx].StrokesPlayed + '</b></td>');
+      $('#leagueTableBody').append('<td style="text-align:center" >' + tableData[indx].StablefordPoints + '(+' + tableData[indx].BonusPoints  + ')</td>');
+      $('#leagueTableBody').append('<td style="text-align:center">' + tableData[indx].TotalPoints + '</td>');
+      $('#leagueTableBody').append('<td style="text-align:center" class="hideOnMobile">' + tableData[indx].HolesPlayed + '</td>');
+      $('#leagueTableBody').append('</tr>');
+    }
+}
 
 function GetLeagueTableData (){ 
         $.ajax({

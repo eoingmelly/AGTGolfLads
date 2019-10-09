@@ -20,9 +20,16 @@ router.get('/', ensureAuthenticated, async function(req, res, next) {
         }
     }
 
+    let courses = [];
+    await AGTGolfCourse.find({}).then(gcs => {
+        if(gcs.length > 0){
+            courses = gcs;
+        }
+    })
+
     AGTGolfLad.find({currentScore: null}).then(golfLads => {
         if(golfLads != undefined){            
-            return res.render('chooseLadsToScore', {golfLads});
+            return res.render('chooseLadsToScore', {"golfLads":golfLads, "courses":courses});
         } else{
             return res.status(404).send("Couldn't find him...");
         }
@@ -32,37 +39,45 @@ router.get('/', ensureAuthenticated, async function(req, res, next) {
 }); 
 
 router.post('/', ensureAuthenticated, async function(req, res, next) {
-    console.log('in post choose lads to score');
     let today = new Date();
     let golfLads = [];
     let courseId = '';
     let course = null;
 
-    
-    if(today.getDate() === 11){
-        console.log('Day 1');
-        await AGTGolfCourse.findOne({courseName : "Old Course (Dom Pedro)"}).then(theCourse => {
+    console.log('course id is: ' + req.body.courseId);
+    if(req.body.courseId === undefined){
+
+        if(today.getDate() === 11){
+            console.log('Day 1');
+            await AGTGolfCourse.findOne({courseName : "Old Course (Dom Pedro)"}).then(theCourse => {
+                courseId = theCourse._id;
+                course = theCourse;
+            })
+        } else if (today.getDate() === 12){
+            console.log('Day 2');
+            await AGTGolfCourse.findOne({courseName : "Ocean Course (Vale Do Lobo)"}).then(theCourse => {
+                courseId = theCourse._id;
+                course = theCourse;
+            })
+        } else if (today.getDate() === 13){
+            console.log('Day 3');
+            await AGTGolfCourse.findOne({courseName : "Royal Course (Vale Do Lobo)"}).then(theCourse => {
+                courseId = theCourse._id;
+                course = theCourse;
+            })
+        } else {
+            console.log('In here as its not a day of the AGT!');
+            await AGTGolfCourse.findOne({courseName : "Old Course (Dom Pedro)"}).then(theCourse => {
+                courseId = theCourse._id;
+                course = theCourse;
+            })
+        }
+    } else{
+        await AGTGolfCourse.findById(req.body.courseId).then(theCourse => {
             courseId = theCourse._id;
             course = theCourse;
         })
-    } else if (today.getDate() === 12){
-        console.log('Day 2');
-        await AGTGolfCourse.findOne({courseName : "Ocean Course (Vale Do Lobo)"}).then(theCourse => {
-            courseId = theCourse._id;
-            course = theCourse;
-        })
-    } else if (today.getDate() === 13){
-        console.log('Day 3');
-        await AGTGolfCourse.findOne({courseName : "Royal Course (Vale Do Lobo)"}).then(theCourse => {
-            courseId = theCourse._id;
-            course = theCourse;
-        })
-    } else {
-        console.log('In here as its not a day of the AGT!');
-        await AGTGolfCourse.findOne({courseName : "Old Course (Dom Pedro)"}).then(theCourse => {
-            courseId = theCourse._id;
-            course = theCourse;
-        })
+        console.log('In here as you have chosen to score for ' + course.courseName);
     }
 
     let scoringGroupNumber = 0;
@@ -76,15 +91,18 @@ router.post('/', ensureAuthenticated, async function(req, res, next) {
             }
         })
     }
-    
+    console.log('0 is: ' + req.body[0]);
     for (let index = 0; index < 8; index++) {
         if(req.body[index] != undefined) {
+            console.log('found a player on index ' + index);
             await AGTGolfLad.findById(req.body[index], {profilePicture:0}).then(golfLad => {
                 golfLad.scoringGroup = scoringGroupNumber;
                 golfLads.push(golfLad);
                 golfLad.save();
              })
-        } 
+        } else{
+            console.log('failed to find a player on index ' + index);
+        }
     }
 
 

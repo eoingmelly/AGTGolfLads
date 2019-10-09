@@ -151,13 +151,15 @@ router.get('/agtGolfLads/currentScores', async (req, res) => {
 router.get('/agtGolfLads/championshipSunday', async (req, res) => {
     let resultString = [];
     
+    console.log('in champ sunday mode');
     AGTGolfLad.find({}).then(async lads => {
         if(lads.length > 0){
             for (let index = 0; index < lads.length; index++) {
                 const element = await lads[index].getChampionshipSundayScore();
                 resultString.push(element);
             }
-            resultString = resultString.sort((a, b) => (a.StablefordPoints < b.StablefordPoints) ? 1 : -1)
+            resultString = resultString.sort((a, b) => (a.TotalPoints < b.TotalPoints) ? 1 : -1)
+            
             let lastPoints = -1;
             let lastPosition = 1;
             for (let indx = 0; indx < resultString.length; indx++) {
@@ -165,15 +167,15 @@ router.get('/agtGolfLads/championshipSunday', async (req, res) => {
                 // console.log(JSON.stringify(element));
                 // console.log('lastPoints = ' + lastPoints);
                 // console.log('stablefordpoints = ' + element.StablefordPoints);
-
+                console.log('totalpoints:'  + resultString[indx].TotalPoints)
                 if(indx == 0){
                     element.Position = indx + 1;
                 }
                 else{
-                    element.Position = lastPoints == element.StablefordPoints ? lastPosition : (indx + 1);    
+                    element.Position = lastPoints == element.TotalPoints ? lastPosition : (indx + 1);    
                 }
 
-                lastPoints = element.StablefordPoints;
+                lastPoints = element.TotalPoints;
                 lastPosition = element.Position;
 
             }
@@ -199,6 +201,7 @@ router.get('/agtGolfLads/leagueScores', async (req, res) => {
                 resultString.push(element);
             }
 
+            console.log('resString is:' + resultString);
             resultString = resultString.sort((a, b) => (a.StablefordPoints < b.StablefordPoints) ? 1 : -1)
             let lastPoints = -1;
             let lastPosition = 1;
@@ -323,6 +326,8 @@ router.get('/agtGolfLads/finaliseLeagueTable', async (req, res) => {
                         break;
                 }
 
+                element.BonusPoints = pts;
+
                 console.log('pts is : ' + pts);
 
                 await AGTGolfLad.findByIdAndUpdate(element.PlayerID, {$set: {bonusPoints: pts }}, {new: true}).then(newOne => {
@@ -396,7 +401,7 @@ router.delete('/agtGolfScores/all', async (req, res) =>{
             const element = theLads[index];
             element.currentScore = null;
             element.historicalScores = [];
-
+            element.bonusPoints = -1;
             await element.save();
         }
 

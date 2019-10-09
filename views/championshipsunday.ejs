@@ -18,16 +18,15 @@
         <img src="/logos/eurotourlogo.png" alt="cá bhfuil sé?"  style="width: 100%;margin-left:auto; margin-right: auto; display: block;"  >
       </div>
     </div>
-    <div class="table-responsive">
+    <div id="championshipTable" class="table-responsive">
       <table class="table table-striped">
         <thead class="hideOnSmall">
           <tr style="text-align:center">
             <th scope="col">Pos.</th> 
             <th scope="col">Player</th>
-            <th scope="col">R1</th>
-            <th scope="col">R2</th>
-            <th class="hideOnMobile" scope="col">Total Strokes</th>
-            <th scope="col">Total Points</th>
+            <th class="hideOnMobile"  scope="col">Strokes</th>
+            <th scope="col">Points(B)</th>
+            <th scope="col">Total</th>
             <th class="hideOnMobile" scope="col">Through</th>
           </tr>
         </thead>
@@ -36,23 +35,22 @@
       </table>
     </div>
     <form action="/profiles">
-      <button type="submit" class="btn btn-primary" >View Profiles</button>  
+      <button type="submit" style="margin-top:15px;" class="btn btn-primary" >View Profiles</button>  
     </form>
     <form action="/standings/parthrees" action="GET">
-      <button type="submit" class="btn btn-primary" >Mini Mike Standings</button>  
+      <button type="submit" style="margin-top:15px;" class="btn btn-primary" >Mini Mike Standings</button>  
     </form>
   </div>
   <div class="col-md-1"></div>
 </div>  
   <script>
     $(document).ready(function(){  
-      GetLeagueTableData();
-      //setInterval(GetLeagueTableData, 3000);
+      GetChampionshipSundayTable();
 });
 
-function GetLeagueTableData (){ 
+function GetChampionshipSundayTable (){ 
         $.ajax({
-      url: "/api/AGTGolfLads/leagueScores",
+      url: "/api/AGTGolfLads/championshipSunday",
       success: function( result ) {
         populateLeagueTable(result);
       },
@@ -60,16 +58,18 @@ function GetLeagueTableData (){
       }
     });
   }
+
+  
+
 function populateLeagueTable(tableData) {
   $('#leagueTable').empty();
     for (var indx in tableData) {
       $('#leagueTableBody').append('<tr>');
       $('#leagueTableBody').append('<th scope="row" style="text-align:center"><b>' + tableData[indx].Position + '</b></th>');
-      $('#leagueTableBody').append('<td><a href=profiles/profile/' + tableData[indx].PlayerID + '>'  + tableData[indx].PlayerName + '</a></td>');
-      $('#leagueTableBody').append('<td style="text-align:center"><small class="hideOnMobile" >' + tableData[indx].RoundOneStrokes + ': </small><b>' + tableData[indx].RoundOnePoints + '</b></td>');
-      $('#leagueTableBody').append('<td style="text-align:center"><small class="hideOnMobile">' + tableData[indx].RoundTwoStrokes + ' : </small><b>' + tableData[indx].RoundTwoPoints + '</b></td>');
-      $('#leagueTableBody').append('<td style="text-align:center"  class="hideOnMobile">' + tableData[indx].StrokesPlayed + '</td>');
-      $('#leagueTableBody').append('<td style="text-align:center">' + tableData[indx].StablefordPoints + '</td>');
+      $('#leagueTableBody').append('<td><a href=/profiles/profile/' + tableData[indx].PlayerID + '>'  + tableData[indx].PlayerName + '</a></td>');
+      $('#leagueTableBody').append('<td style="text-align:center" class="hideOnMobile"><b>' + tableData[indx].StrokesPlayed + '</b></td>');
+      $('#leagueTableBody').append('<td style="text-align:center" >' + tableData[indx].StablefordPoints + '(+' + tableData[indx].BonusPoints  + ')</td>');
+      $('#leagueTableBody').append('<td style="text-align:center">' + tableData[indx].TotalPoints + '</td>');
       $('#leagueTableBody').append('<td style="text-align:center" class="hideOnMobile">' + tableData[indx].HolesPlayed + '</td>');
       $('#leagueTableBody').append('</tr>');
     }

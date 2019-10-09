@@ -30,6 +30,19 @@ router.get('/parthrees', ensureAuthenticated, async (req, res) => {
     })
 });
 
+router.get('/championshipSunday', ensureAuthenticated, async (req, res) => {
+    res.locals.user = req.user;
+    AGTGolfLad.find({}).then(golfLads => {
+        if(golfLads != undefined){
+            return res.render('championshipsunday', {data: golfLads});
+        } else{
+            return res.status(404).send("Couldn't find them...");
+        }
+    }).catch(err => {
+        return res.status(404).send("Couldn't find him with err : " + err);
+    })
+});
+
 
 
 module.exports = router;

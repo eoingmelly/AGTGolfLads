@@ -75,15 +75,30 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-4">
-      <button class="btn btn-primary" onclick="resetAllGolfScores()" >Reset Scores</button>
+      <button class="btn btn-primary" onclick="resetAllGolfScores()" >Reset All Scores</button>
     </div>
-    <div class="col-4"></div>
+    <div class="col-4">
+        <button class="btn btn-primary" onclick="finaliseLeagueTable()" >Finalise Table</button>
+    </div>
     <div class="col-4"></div>
   </div>
 </div>
 <% } %> 
 
 <script>
+function finaliseLeagueTable() {
+  $.ajax({
+    url: "/api/AGTGolfLads/finaliseleaguetable",
+    type: 'GET',
+    success: function (result) {
+      alert('We finalised them!');
+    },
+    
+      error: function (err) {
+      }
+  });
+}
+
   function resetAllGolfScores() {
     $.ajax({
       url: "/api/agtGolfScores/all",

@@ -41,6 +41,9 @@
     <form style="margin: 8px;" action="/standings/parthrees" action="GET">
       <button type="submit" class="btn btn-primary" >Mini Mike Standings</button>  
     </form>
+    <form style="margin: 8px;" action="/standings/championshipsunday" action="GET">
+      <button type="submit" class="btn btn-primary" >Final Day Standings!</button>  
+    </form>
     <form style="margin: 8px;" action="/scoring">
       <button type="submit" class="btn btn-primary" >Score for a group</button>  
     </form>
@@ -50,7 +53,6 @@
   <script>
     $(document).ready(function(){  
       GetLeagueTableData();
-      //setInterval(GetLeagueTableData, 3000);
 });
 
 function GetLeagueTableData (){ 

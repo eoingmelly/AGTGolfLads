@@ -1,24 +1,35 @@
 <div class="card">
-        <% include ./partials/messages %>
-    </div>
+    <% include ./partials/messages %>
+</div>
+<div class="row">
+    <div class="col-12">
+        <form class="col-12" action="/scoring" method="POST">
+            <label style="margin-bottom: 0px;">Choose A Course:</label>
+            <div class="card" style="text-align: left; padding-left: 5px; margin-bottom:10px;">
+                <% for(var i=0; i < courses.length; i++) { %>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="cbx_<%= courses[i].courseName %>" name="courseId" value="<%= courses[i]._id %>" />
+                            <label class="form-check-label" for="cbx_<%= courses[i].courseName %>"><%= courses[i].courseName %></label>
+                        </div>
+                <% } %>        
+            </div>
 
-    <div class="row"> 
-        <form action="/scoring" method="POST">
-        <% for(var i=0; i < golfLads.length; i++) { %>
-            <div class="form-group col-md-4">
-                <input type="checkbox" name="<%= i %>" value="<%= golfLads[i]._id %>"> <%= golfLads[i].displayname %> </br>
-            </div>  
-        <% } %>
-        <input type="submit" value="Let's Go!" /> 
-    </form>
-    <a href="/standings" class="btn btn-primary">Back To Standings</a>
-</div> 
+            <label  style="margin-bottom: 0px;">Choose 4 Golfers:</label>
+            <div class="card" style="text-align: left; padding-left: 5px; margin-bottom:10px;">
+                <div class="form-group">
+                <% for(var i=0; i < golfLads.length; i++) { %>
+                    <div class="form-check">
+                        <input class="form-check-label" style="margin-right: 25px;" type="checkbox" id="cbx_<%= golfLads[i].displayname %>" name="<%= i %>" value="<%= golfLads[i]._id %>" />
+                        <label for="cbx_<%= golfLads[i].displayname %>"><%= golfLads[i].displayname %></label>
+                    </div>
+                <% } %>
+                </div>
+            </div>
+            <input style="margin-top: 15px; width: 100%;" class="btn btn-primary" type="submit" value="Start Scoring" /> 
+        </form>
+        <a style="margin-top: 40px; width: 100%;" style="text-align: center;" href="/standings" class="btn btn-danger">Back To Standings</a>
+    </div>
+</div>
 <script>
-    $(document).ready(function() {
-        if($(':checkbox').length === 4){
-            $(':checkbox').prop( "checked", true );
-        } else{
-            console.log('checkboxes : ' +  $(':checkbox').length);
-        }
-    })
+
 </script>
