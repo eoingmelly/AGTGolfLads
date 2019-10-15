@@ -397,13 +397,13 @@ router.get('/agtGolfLad/:id/profilePicture', function(req,res,next) {
 
 router.delete('/agtGolfScores/all', async (req, res) =>{
     await AGTGolfLad.find({}).then(async theLads => {
-        for (let index = 0; index < theLads.length; index++) {
-            const element = theLads[index];
-            element.currentScore = null;
-            element.historicalScores = [];
-            element.bonusPoints = -1;
-            await element.save();
-        }
+        // for (let index = 0; index < theLads.length; index++) {
+        //     const element = theLads[index];
+        //     element.currentScore = null;
+        //     element.historicalScores = [];
+        //     element.bonusPoints = -1;
+        //     await element.save();
+        // }
 
         return res.status(200).json(theLads);
     }).catch(err => {
