@@ -14,7 +14,8 @@ var agtGolfScoreSchema = new Schema({
    datePlayed: Date,
    holeScores : [agtHoleScore.schema],
    course : agtGolfCourse.schema,
-   holePar : Number
+   holePar : Number,
+   bonusPoints : {type:Number, default: -1}
 });
 
 

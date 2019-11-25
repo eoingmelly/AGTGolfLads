@@ -91,12 +91,20 @@ router.get('/agtGolfLads', async (req, res) => {
             for (let index = 0; index < lads.length; index++) {
                 const element = lads[index];
                 
+                //element.currentScore = null;
+                // element.currentScore.bonusPoints = element.bonusPoints;
+                // element.historicalScores[2].bonusPoints = element.bonusPoints;
+                // console.log('BPs for most recent round: ' + element.currentScore.bonusPoints);
+                // console.log('current course name played: ' + element.currentScore.course.courseName);
+                // console.log('hs[2].date played: ' + element.historicalScores[2].datePlayed);
+                // console.log('course name played: ' + element.historicalScores[2].course.courseName);
+                
                 // if(element.fburl == "faceb") {element.fburl = "#"}
                 // if(element.liurl == "link") {element.liurl = "#"}
                 // if(element.insturl == "insta") {element.insturl = "#"}
                 //if(element.bonusPoints == 8) {element.bonusPoints = -1}
                 //if(element.scoringGroup != 0) {element.scoringGroup = 0}
-                await element.save();
+                //await element.save();
             }
 
             return res.status(200).json(lads);
@@ -424,7 +432,6 @@ router.post('/agtGolfScores/:holeNum', async (req, res) =>{
     await AGTGolfCourse.findById(courseID).then(async playingCourse =>{
         if(playingCourse != null){
             course = playingCourse;
-            
             theRoundNumber = playingCourse.courseName.includes('Old Course') ? 1 : playingCourse.courseName.includes('Ocean Course') ? 2 : 3
         } else {
             return res.status(400).json("No course found with that ID");

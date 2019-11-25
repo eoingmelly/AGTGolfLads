@@ -1,10 +1,128 @@
-<div class="row mt-5">
-  <div class="col-md-6 m-auto">
-    <div class="card card-body text-center">
-        <img src="/logos/agtlogo2019.png" alt="Cá Bhfuil Sé?" style="max-width: 45px;" />
-      <p>Login</p>
-      <!--<a href="/users/register" class="btn btn-primary btn-block mb-2">Register</a>-->
-      <a href="/users/login" class="btn btn-secondary btn-block">Login</a>
-    </div>
-  </div>
+<div class="card">
+  <% include ./partials/messages %>
 </div>
+<section class="gallery-block compact-gallery">
+  <div class="container">
+      <div class="heading">
+          <h2></h2>
+      </div>
+      <div class="row no-gutters">
+          <div class="col-md-6 col-lg-4 item zoom-on-hover">
+              <a class="lightbox" href="/img/image1.jpg">
+                  <img class="img-fluid image" src="/img/image1.jpg">
+                  <span class="description">
+                      <span class="description-heading"></span>
+                      <span class="description-body"></span>
+                  </span>
+              </a>
+          </div>
+          <div class="col-md-6 col-lg-4 item zoom-on-hover">
+              <a class="lightbox" href="/img/image2.jpg">
+                  <img class="img-fluid image" src="/img/image2.jpg">
+                  <span class="description">
+                      <span class="description-heading"></span>
+                      <span class="description-body"></span>
+                  </span>
+              </a>
+          </div>
+          <div class="col-md-6 col-lg-4 item zoom-on-hover">
+              <a class="lightbox" href="/img/image3.jpg">
+                  <img class="img-fluid image" src="/img/image3.jpg">
+                  <span class="description">
+                      <span class="description-heading"></span>
+                      <span class="description-body"></span>
+                  </span>
+              </a>
+          </div>
+          <div class="col-md-6 col-lg-4 item zoom-on-hover">
+              <a class="lightbox" href="/img/image4.jpg">
+                  <img class="img-fluid image" src="/img/image4.jpg">
+                  <span class="description">
+                      <span class="description-heading"></span>
+                      <span class="description-body"></span>
+                  </span>
+                  </a>
+              </div>
+          <div class="col-md-6 col-lg-4 item zoom-on-hover">
+              <a class="lightbox" href="/img/image5.jpg">
+                  <img class="img-fluid image" src="/img/image5.jpg">
+                  <span class="description">
+                      <span class="description-heading"></span>
+                      <span class="description-body"></span>
+                  </span>
+              </a>
+          </div>
+          <div class="col-md-6 col-lg-4 item zoom-on-hover">
+              <a class="lightbox" href="/img/image6.jpg">
+                  <img class="img-fluid image" src="/img/image6.jpg">
+                  <span class="description">
+                      <span class="description-heading"></span>
+                      <span class="description-body"></span>
+                  </span>
+              </a>
+          </div>
+          <div class="col-md-6 col-lg-4 item zoom-on-hover">
+              <a class="lightbox" href="/img/image7.jpg">
+                  <img class="img-fluid image" src="/img/image7.jpg">
+                  <span class="description">
+                      <span class="description-heading"></span>
+                      <span class="description-body"></span>
+                  </span>
+              </a>
+          </div>
+          <div class="col-md-6 col-lg-4 item zoom-on-hover">
+              <a class="lightbox" href="/img/image8.jpg">
+                  <img class="img-fluid image" src="/img/image8.jpg">
+                  <span class="description">
+                      <span class="description-heading"></span>
+                      <span class="description-body"></span>
+                  </span>
+              </a>
+          </div>
+          <div class="col-md-6 col-lg-4 item zoom-on-hover">
+              <a class="lightbox" href="/img/image9.jpeg">
+                  <img class="img-fluid image" src="/img/image9.jpeg">
+                  <span class="description">
+                      <span class="description-heading"></span>
+                      <span class="description-body"></span>
+                  </span>
+              </a>
+          </div>
+          <div class="col-md-12 col-lg-12 item zoom-on-hover">
+            <a class="lightbox" href="/img/image10.jpg">
+                <img class="img-fluid image" src="/img/image10.jpg">
+                <span class="description">
+                    <span class="description-heading"></span>
+                    <span class="description-body"></span>
+                </span>
+            </a>
+        </div>
+      </div>
+  </div>
+</section>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <td>Pic</td>
+      <td>Lad</td>
+      <td>Magics</td>
+      <td>Minis</td>
+      <td>1 Days</td>
+    </tr>
+  </thead>
+  <tbody>
+    <% for(var i=0; i < golfLads.length; i++) { %>
+      <tr>
+        <td><img src="/api/agtGolfLad/<%= golfLads[i]._id %>/profilePicture" alt="<%= golfLads[i].displayName %>" style="width:10%; max-height: 156px;" /></td>
+        <td><%= golfLads[i].displayname %></td>
+        <td><%= golfLads[i].competitionHistory.magicMikeWinCount %></td>
+        <td><%= golfLads[i].competitionHistory.miniMikeWinCount %></td>
+        <td><%= golfLads[i].competitionHistory.oneDayWinCount %></td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
+<script>
+  baguetteBox.run('.compact-gallery', { animation: 'slideIn'});
+</script>

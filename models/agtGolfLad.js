@@ -152,13 +152,21 @@ agtGolfLadSchema.methods.getLeagueScore = async function () {
   return result;
 }
 
+const datesAreOnSameDay = (first, second) =>
+    first.getFullYear() === second.getFullYear() &&
+    first.getMonth() === second.getMonth() &&
+    first.getDate() === second.getDate();
+
 agtGolfLadSchema.methods.getChampionshipSundayScore = async function () {
-console.log('this.currentscore is ' + this.currentScore);
 
 let textResult = this.displayname + "'s current score is ";
 let result = {};
+var sun = new Date(2019,9,13);
 
-  if(this.currentScore === null){
+console.log('dates the same? : ' + datesAreOnSameDay(sun, this.historicalScores[this.historicalScores.length- 1].datePlayed));
+console.log('last round played = ' + this.historicalScores[this.historicalScores.length- 1].datePlayed);
+  
+if(!datesAreOnSameDay(sun, this.historicalScores[this.historicalScores.length- 1].datePlayed)){
     textResult =  this.displayname + " has not started his final round yet..."
   result = {
     "PlayerID" : this._id,
@@ -170,32 +178,34 @@ let result = {};
     "HolesPlayed" : 0,
     "TextResult" : textResult
   }
-
     return result;
-  } else if(this.currentScore.roundNumber != 3  ){
-    textResult =  this.displayname + " has not started his final round yet..."
-    result = {
-      "PlayerID" : this._id,
-      "PlayerName" : this.displayname,
-      "StrokesPlayed" : 0,
-      "StablefordPoints" : 0,
-      "BonusPoints" : this.bonusPoints,
-      "TotalPoints" : this.bonusPoints,
-      "HolesPlayed" : 0,
-      "TextResult" : textResult
-    }
-  }
+  } 
+  // else if(this.currentScore.roundNumber != 3  ){
+  //   textResult =  this.displayname + " has not started his final round yet..."
+  //   result = {
+  //     "PlayerID" : this._id,
+  //     "PlayerName" : this.displayname,
+  //     "StrokesPlayed" : 0,
+  //     "StablefordPoints" : 0,
+  //     "BonusPoints" : this.bonusPoints,
+  //     "TotalPoints" : this.bonusPoints,
+  //     "HolesPlayed" : 0,
+  //     "TextResult" : textResult
+  //   }
+  // }
 
-  textResult +=  this.currentScore.strokesTotalPlayed + " strokes played, for " + this.currentScore.stablefordTotalScore + " points through " + this.currentScore.holesPlayed + " holes, plus a bonus of " + this.bonusPoints + " based on his league position.";
+  textResult +=  this.historicalScores[this.historicalScores.length- 1].strokesTotalPlayed + " strokes played, for " + 
+  this.historicalScores[this.historicalScores.length- 1].stablefordTotalScore + " points through " + 
+  this.historicalScores[this.historicalScores.length- 1].holesPlayed + " holes, plus a bonus of " + this.historicalScores[this.historicalScores.length- 1].bonusPoints + " based on his league position.";
  
   result = {
     "PlayerID" : this._id,
     "PlayerName" : this.displayname,
-    "StrokesPlayed" : this.currentScore.strokesTotalPlayed,
-    "StablefordPoints" : this.currentScore.stablefordTotalScore,
-    "BonusPoints" : this.bonusPoints,
-    "TotalPoints" : parseInt(this.bonusPoints + this.currentScore.stablefordTotalScore),
-    "HolesPlayed" : this.currentScore.holesPlayed,
+    "StrokesPlayed" : this.historicalScores[this.historicalScores.length- 1].strokesTotalPlayed,
+    "StablefordPoints" : this.historicalScores[this.historicalScores.length- 1].stablefordTotalScore,
+    "BonusPoints" : this.historicalScores[this.historicalScores.length- 1].bonusPoints,
+    "TotalPoints" : parseInt(this.historicalScores[this.historicalScores.length- 1].bonusPoints + this.historicalScores[this.historicalScores.length- 1].stablefordTotalScore),
+    "HolesPlayed" : this.historicalScores[this.historicalScores.length- 1].holesPlayed,
     "TextResult" : textResult
   }
   return result;
@@ -209,10 +219,13 @@ agtGolfLadSchema.methods.getParThreeScore = async function () {
     for (let i = 0; i < allRounds[index].holeScores.length; i++) {
       const element = allRounds[index].holeScores[i];
       if(element.holePar == 3){
+        console.log(this.displayname + ' score: ' + element.strokesScore)
         parThreeCol.push(element);
       }
     } 
   }
+
+  
 
   let strokesPlayed = 0
   let holesPlayed = 0;
