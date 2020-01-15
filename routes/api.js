@@ -68,18 +68,6 @@ var storage = multer.diskStorage({
     })
 })
 
-// router.get('/blogEntries/:id/picture', function(req,res,next) {
-//     BlogEntry.findById(req.params.id, function(err, blogEntry){
-//         if(err){return next(err)};
-//         if(blogEntry != undefined){
-//             res.contentType(blogEntry.image.contentType);
-//             res.status(200).send(blogEntry.image.data);
-//         }else{
-//             res.status(404).send([]);
-//         }
-//     })
-// });
-
 router.post('/sitePhoto', upload.single('picture'), async (req, res) => {
 //console.log('file.path is:' + req.file.path)
 console.log('file is:' + req.file)
