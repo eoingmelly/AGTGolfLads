@@ -5,11 +5,15 @@ const AGTGolfCourse = require('../models/agtGolfCourse');
 const AGTGolfCourseHole = require('../models/agtGolfCourseHole');
 const AgtGolfScore = require('../models/agtGolfScore');
 const AgtHoleScore = require('../models/agtHoleScore');
+const BlogEntry = require('../models/blogEntry');
 const mongoose = require('mongoose');
 var fs = require('fs');
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const compHist = require('../models/agtCompetitionHistory');
+const  blobClient  = require('@azure/storage-blob');
+const AGTPhotoUpload = require('../models/agtPhotoUpload');
+
 
 
 //MULTER
@@ -18,16 +22,109 @@ var storage = multer.diskStorage({
       cb(null, __dirname + '\\..\\uploads')      //you tell where to upload the files
     },
     filename: function (req, file, cb) {
-        console.log('multer file is ' + file.toString());
-      cb(null, file.fieldname + '-' + Date.now() + '.png')
+        let fileType = file.originalname.substring( file.originalname.lastIndexOf('.'));
+        cb(null, file.fieldname + '-' + Date.now() + fileType);
     }
   })
   
   var upload = multer({storage: storage,
     onFileUploadStart: function (file) {
       console.log(file.originalname + ' is starting ...')
-    },
+    }
   });
+  
+  router.post('/blogEntry', upload.single('picture'), async (req, res) => {
+    let imgPath = req.file.path;
+
+    let fileName = req.body.headline.replace(/ /g, '_') + imgPath.substring(imgPath.lastIndexOf('.'));
+    console.log('fn is ' + fileName);
+    var be = new BlogEntry({
+        author : req.body.author,
+        headline : req.body.headline,
+        mainText : req.body.mainText,
+        date : Date.now(),
+        pathToImage : fileName
+    });
+
+    const blobServiceClient = await blobClient.BlobServiceClient.fromConnectionString(process.env.CONNECT_STR);
+    
+    console.log('blobServiceClient is : ' +  blobServiceClient)
+    console.log('imagepath is : ' + be.pathToImage);
+    let containerName = "agtgolflads/blogentries";
+    const containerClient = await blobServiceClient.getContainerClient(containerName);
+    
+    const blockBlobClient = containerClient.getBlockBlobClient(fileName);
+
+    let data = fs.readFileSync(imgPath);
+
+    await blockBlobClient.upload(data, data.length).then(
+        be.save().then(entry => {
+            return res.status(200).json(entry);
+        }).catch(err => {
+            return res.status(400).json(err);
+        })
+    ).catch(err => {
+        return res.status(400).json(err);
+    })
+})
+
+// router.get('/blogEntries/:id/picture', function(req,res,next) {
+//     BlogEntry.findById(req.params.id, function(err, blogEntry){
+//         if(err){return next(err)};
+//         if(blogEntry != undefined){
+//             res.contentType(blogEntry.image.contentType);
+//             res.status(200).send(blogEntry.image.data);
+//         }else{
+//             res.status(404).send([]);
+//         }
+//     })
+// });
+
+router.post('/sitePhoto', upload.single('picture'), async (req, res) => {
+//console.log('file.path is:' + req.file.path)
+console.log('file is:' + req.file)
+
+    let imgPath = req.file.path;
+    let fileName = req.body.caption.replace(/ /g, '_') + imgPath.substring(imgPath.lastIndexOf('.'));
+    var photoUpload = new AGTPhotoUpload({
+        caption : req.body.caption,
+        pathToImage : fileName,
+        date : Date.now()
+    });
+
+    const blobServiceClient = await blobClient.BlobServiceClient.fromConnectionString(process.env.CONNECT_STR);
+    
+    let containerName = "agtgolflads/photouploads";
+    const containerClient = await blobServiceClient.getContainerClient(containerName);
+    
+    const blockBlobClient = containerClient.getBlockBlobClient(fileName);
+
+    let data = fs.readFileSync(imgPath);
+
+    await blockBlobClient.upload(data, data.length).then( 
+        photoUpload.save().then().catch(err => {
+            return res.status(400).json(err);
+        })
+    ).catch(err => {
+        return res.status(400).json(err);
+    });
+    return res.status(200).json("Successfully Uploaded");
+})
+
+router.get('/anyGalleryPhoto', async (req,res) => {
+    let random = 0;
+    AGTPhotoUpload.countDocuments((err,num) => {
+        random = Math.floor(Math.random() * num);
+        console.log('random is ' + random);
+    });
+    
+    AGTPhotoUpload.findOne().skip(random).then((result) => {
+        let path = {'imagePath' : result.pathToImage};
+        return res.status(200).json(path);
+    })
+    
+});
+
 //TEST...
   router.put('/agtGolfLadImg/:id', upload.single('profilePicture'), async (req, res) => {
     AGTGolfLad.findOne({_id : req.params.id}).then(lad => {
@@ -90,23 +187,7 @@ router.get('/agtGolfLads', async (req, res) => {
         if(lads.length > 0){
             for (let index = 0; index < lads.length; index++) {
                 const element = lads[index];
-                
-                //element.currentScore = null;
-                // element.currentScore.bonusPoints = element.bonusPoints;
-                // element.historicalScores[2].bonusPoints = element.bonusPoints;
-                // console.log('BPs for most recent round: ' + element.currentScore.bonusPoints);
-                // console.log('current course name played: ' + element.currentScore.course.courseName);
-                // console.log('hs[2].date played: ' + element.historicalScores[2].datePlayed);
-                // console.log('course name played: ' + element.historicalScores[2].course.courseName);
-                
-                // if(element.fburl == "faceb") {element.fburl = "#"}
-                // if(element.liurl == "link") {element.liurl = "#"}
-                // if(element.insturl == "insta") {element.insturl = "#"}
-                //if(element.bonusPoints == 8) {element.bonusPoints = -1}
-                //if(element.scoringGroup != 0) {element.scoringGroup = 0}
-                //await element.save();
             }
-
             return res.status(200).json(lads);
         } else {
             return res.status(404).json('No lads found');
@@ -115,6 +196,7 @@ router.get('/agtGolfLads', async (req, res) => {
         return res.status(400).json(err);
     })
 })
+
 //Return all current scores
 router.get('/agtGolfLads/currentScores', async (req, res) => {
     let resultString = [];
@@ -172,9 +254,6 @@ router.get('/agtGolfLads/championshipSunday', async (req, res) => {
             let lastPosition = 1;
             for (let indx = 0; indx < resultString.length; indx++) {
                 const element = resultString[indx];
-                // console.log(JSON.stringify(element));
-                // console.log('lastPoints = ' + lastPoints);
-                // console.log('stablefordpoints = ' + element.StablefordPoints);
                 console.log('totalpoints:'  + resultString[indx].TotalPoints)
                 if(indx == 0){
                     element.Position = indx + 1;
@@ -273,7 +352,7 @@ router.get('/agtGolfLads/parThreeScores', async (req, res) => {
         return res.status(400).json(err);
     })
 })
-
+//Get rid of all of this nonsense.
 router.get('/agtGolfLads/finaliseLeagueTable', async (req, res) => {
 
     let results= [];
@@ -370,26 +449,6 @@ router.get('/agtGolfLad/:id', async (req, res) => {
     })
 })
 
-//golf lad by id
-router.put('/agtGolfLadImgWorking/:id', async (req, res) => {
-    AGTGolfLad.findOne({_id : req.params.id}).then(lad => {
-        if(lad != undefined){
-            let imgPath = 'C:\\Users\\eoinm\\Desktop\\lads.jpg';
-
-            lad.profilePicture.data = fs.readFileSync(imgPath);
-            lad.profilePicture.contentType = 'image/jpeg';
-            lad.save();
-            return res.status(200).json(lad);
-        } else {
-            return res.status(404).json('No lad found with id ' + req.params.id);
-        }
-    }).catch(err =>{
-        return res.status(400).json(err);
-    })
-})
-
-
-
 router.get('/agtGolfLad/:id/profilePicture', function(req,res,next) {
     AGTGolfLad.findById( req.params.id, function(err,golfLad) {
         if (err) return next(err);
@@ -405,13 +464,7 @@ router.get('/agtGolfLad/:id/profilePicture', function(req,res,next) {
 
 router.delete('/agtGolfScores/all', async (req, res) =>{
     await AGTGolfLad.find({}).then(async theLads => {
-        // for (let index = 0; index < theLads.length; index++) {
-        //     const element = theLads[index];
-        //     element.currentScore = null;
-        //     element.historicalScores = [];
-        //     element.bonusPoints = -1;
-        //     await element.save();
-        // }
+
 
         return res.status(200).json(theLads);
     }).catch(err => {

@@ -1,123 +1,78 @@
 <div class="card">
   <% include ./partials/messages %>
 </div>
+
+<!-- <% for(var i=0; i < 0; i++) { %>
+    <div><img src="/api/blogEntries/<%= data.blogEntries[i]._id %>/picture" alt="Where is it??" style="width:10%; max-height: 156px;" /></div>
+      <div><%= data.blogEntries[i].headline %></div>
+      <div><%= data.blogEntries[i].mainText %></div>
+      <div><%= data.blogEntries[i].author %></div>
+      <div><%= data.blogEntries[i].date %></div>
+  <% } %>
+</section> -->
 <section class="gallery-block compact-gallery">
   <div class="container">
-      <div class="heading">
-          <h2></h2>
-      </div>
-      <div class="row no-gutters">
-          <div class="col-md-6 col-lg-4 item zoom-on-hover">
-              <a class="lightbox" href="/img/image1.jpg">
-                  <img class="img-fluid image" src="/img/image1.jpg">
-                  <span class="description">
-                      <span class="description-heading"></span>
-                      <span class="description-body"></span>
-                  </span>
-              </a>
-          </div>
-          <div class="col-md-6 col-lg-4 item zoom-on-hover">
-              <a class="lightbox" href="/img/image2.jpg">
-                  <img class="img-fluid image" src="/img/image2.jpg">
-                  <span class="description">
-                      <span class="description-heading"></span>
-                      <span class="description-body"></span>
-                  </span>
-              </a>
-          </div>
-          <div class="col-md-6 col-lg-4 item zoom-on-hover">
-              <a class="lightbox" href="/img/image3.jpg">
-                  <img class="img-fluid image" src="/img/image3.jpg">
-                  <span class="description">
-                      <span class="description-heading"></span>
-                      <span class="description-body"></span>
-                  </span>
-              </a>
-          </div>
-          <div class="col-md-6 col-lg-4 item zoom-on-hover">
-              <a class="lightbox" href="/img/image4.jpg">
-                  <img class="img-fluid image" src="/img/image4.jpg">
-                  <span class="description">
-                      <span class="description-heading"></span>
-                      <span class="description-body"></span>
-                  </span>
-                  </a>
-              </div>
-          <div class="col-md-6 col-lg-4 item zoom-on-hover">
-              <a class="lightbox" href="/img/image5.jpg">
-                  <img class="img-fluid image" src="/img/image5.jpg">
-                  <span class="description">
-                      <span class="description-heading"></span>
-                      <span class="description-body"></span>
-                  </span>
-              </a>
-          </div>
-          <div class="col-md-6 col-lg-4 item zoom-on-hover">
-              <a class="lightbox" href="/img/image6.jpg">
-                  <img class="img-fluid image" src="/img/image6.jpg">
-                  <span class="description">
-                      <span class="description-heading"></span>
-                      <span class="description-body"></span>
-                  </span>
-              </a>
-          </div>
-          <div class="col-md-6 col-lg-4 item zoom-on-hover">
-              <a class="lightbox" href="/img/image7.jpg">
-                  <img class="img-fluid image" src="/img/image7.jpg">
-                  <span class="description">
-                      <span class="description-heading"></span>
-                      <span class="description-body"></span>
-                  </span>
-              </a>
-          </div>
-          <div class="col-md-6 col-lg-4 item zoom-on-hover">
-              <a class="lightbox" href="/img/image8.jpg">
-                  <img class="img-fluid image" src="/img/image8.jpg">
-                  <span class="description">
-                      <span class="description-heading"></span>
-                      <span class="description-body"></span>
-                  </span>
-              </a>
-          </div>
-          <div class="col-md-6 col-lg-4 item zoom-on-hover">
-              <a class="lightbox" href="/img/image9.jpeg">
-                  <img class="img-fluid image" src="/img/image9.jpeg">
-                  <span class="description">
-                      <span class="description-heading"></span>
-                      <span class="description-body"></span>
-                  </span>
-              </a>
-          </div>
-          <div class="col-md-12 col-lg-12 item zoom-on-hover">
-            <a class="lightbox" href="/img/image10.jpg">
-                <img class="img-fluid image" src="/img/image10.jpg">
-                <span class="description">
-                    <span class="description-heading"></span>
-                    <span class="description-body"></span>
-                </span>
-            </a>
+    <h3>Blog Entries</h3>
+        <div class="row no-gutters">  
+        <% for(var i=0; i < data.blogEntries.length; i++) { %>
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="card border-0 transform-on-hover"  >
+                    <a class="lightbox" href="#" >
+                        <img src="https://wooshservicesstorage.blob.core.windows.net/agtgolflads/blogentries/<%= data.blogEntries[i].pathToImage %>" alt="Card Image" class="card-img-top">
+                    </a>
+                    <div class="card-body" >
+                        <h6><a href="#"><%= data.blogEntries[i].headline %></a></h6>
+                        <p class="text-muted card-text"><%= data.blogEntries[i].author %> : <%= data.blogEntries[i].getShortDate() %></p>
+                    </div>
+                </div>
+            </div>
+        <% } %>    
         </div>
-      </div>
-  </div>
+        <div>
+          <a href="/profiles">Add a new blog entry here...</a>
+        </div>
+      <div class="row no-gutters">
+        <div style="width:100%;height:240px;">
+            <% for(var i=0; i < data.photoUploads.length; i++) { %>
+                <% if(i != 0 && i % 2 == 0) { %>
+                    </div>
+                    <div style="width:100%;height:240px;">
+                    <% } %>    
+                    <a class="lightbox" href="https://wooshservicesstorage.blob.core.windows.net/agtgolflads/photouploads/<%= data.photoUploads[i].pathToImage %>" >
+                        <img class="img-fluid image" id="imgNumber_<%= i %>" src="https://wooshservicesstorage.blob.core.windows.net/agtgolflads/photouploads/<%= data.photoUploads[i].pathToImage %>" style="float:left;width:50%;height:100%;object-fit:cover;">
+                    </a> 
+            <% } %>    
+    </div>
+    <div style="align-content: center;">
+        <form  action="../api/sitePhoto" method="post" enctype="multipart/form-data" id="photoForm" >
+          <h3>Upload a photo to display in the gallery.</h3>
+          <label for="picture"  accept="image/png, .jpeg, .jpg, image/gif">Photo (Jpeg)</label>
+          <input type="file" required id="photoFileInput" name="picture" >
+          <label for="caption">Caption For Photo:</label>
+          <input type="text" required id="photoCaptionTextBox" name="caption">
+          <button type="button" onclick="postPhotoToServer()" >Upload</button>
+      </form>
+    </div>
+
 </section>
 <table class="table table-striped">
   <thead>
     <tr>
-      <td>Pic</td>
-      <td>Lad</td>
-      <td>Magics</td>
-      <td>Minis</td>
-      <td>1 Days</td>
+      <td style="width: 10%;">Pic</td>
+      <td style="width: 30%;">Lad</td>
+      <td style="width: 20%;">Magics</td>
+      <td style="width: 20%;">Minis</td>
+      <td style="width: 20%;">1 Days</td>
     </tr>
   </thead>
   <tbody>
-    <% for(var i=0; i < golfLads.length; i++) { %>
+    <% for(var i=0; i < data.golfLads.length; i++) { %>
       <tr>
-        <td><img src="/api/agtGolfLad/<%= golfLads[i]._id %>/profilePicture" alt="<%= golfLads[i].displayName %>" style="width:10%; max-height: 156px;" /></td>
-        <td><%= golfLads[i].displayname %></td>
-        <td><%= golfLads[i].competitionHistory.magicMikeWinCount %></td>
-        <td><%= golfLads[i].competitionHistory.miniMikeWinCount %></td>
-        <td><%= golfLads[i].competitionHistory.oneDayWinCount %></td>
+        <td><img src="/api/agtGolfLad/<%= data.golfLads[i]._id %>/profilePicture" alt="<%= data.golfLads[i].displayname %>" style="width:100%; max-height: 156px;" /></td>
+        <td style="width: 30%;"><%= data.golfLads[i].displayname %></td>
+        <td style="width: 20%;" ><%= data.golfLads[i].competitionHistory != null ? data.golfLads[i].competitionHistory.magicMikeWinCount : "" %></td>
+        <td style="width: 20%;"><%= data.golfLads[i].competitionHistory != null ?  data.golfLads[i].competitionHistory.miniMikeWinCount : "" %></td>
+        <td style="width: 20%;"><%= data.golfLads[i].competitionHistory != null ?  data.golfLads[i].competitionHistory.oneDayWinCount : "" %></td>
       </tr>
     <% } %>
   </tbody>
@@ -125,4 +80,67 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
 <script>
   baguetteBox.run('.compact-gallery', { animation: 'slideIn'});
+
+function postPhotoToServer(){ 
+  var form = document.getElementById('photoForm');
+  var formData = new FormData(form);
+  $.ajax({
+    url: "api/sitePhoto",
+    data: formData,
+    processData: false,
+    contentType: false,
+    type: 'POST',
+    success: function(data){
+      iziToast.show({
+        position:'topRight',
+        color:'green',
+        title: 'Success',
+        message: 'Good Job'
+      });
+      document.getElementById('photoForm').reset();
+    },
+    error: function(err){
+      iziToast.show({
+        position:'topRight',
+        color:'red',
+        title: 'Failure',
+        message: 'Something has gone wrong!'
+      });
+
+      document.getElementById('photoForm').reset();
+    }
+  }); 
+}
+
+$( document ).ready(function() {
+  setInterval(function() {changeGalleryPhoto()}
+   , 10000);
+});
+
+function changeGalleryPhoto(){
+    let index = getRandomInt(4);
+    let id = '#imgNumber_' + index;
+  
+    iziToast.show({
+        position:'topRight',
+        color:'green',
+        title: 'Success',
+        message: id
+      });
+
+      {
+  var div = $(id);
+  div.animate({height: '300px', opacity: '0.4'}, "slow");
+  div.animate({width: '300px', opacity: '0.8'}, "slow");
+  div.animate({height: '100px', opacity: '0.4'}, "slow");
+  div.animate({width: '100px', opacity: '0.8'}, "slow");
+}
+  //$(id).attr('src', newSrc);
+
+}
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
 </script>
